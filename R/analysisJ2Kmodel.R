@@ -1,0 +1,691 @@
+#' Daily water balance of the basin
+#'
+#'More info in the basic of results on J2000 hydrological model
+#'@param TimeLoop The timeloop file present in output folder of J2K model
+#'
+#'@return Plot with the daily water balance
+#'
+#'@examples
+#'WatBal_plot() <- plot(x=years, y= daily_water_storage_in_basin)
+#'
+#'@export
+
+
+J2K_WatBalplot <- function(){
+  #read header names
+  variable_head <- unlist(strsplit(scan(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),"",nlines = 1,skip = 5,sep = "\n"),split = "\t"))
+  #read data
+
+  timeloop <- fread(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),skip = 10)
+  timeloop <- timeloop[,1:length(variable_head)]
+  #assign column names
+  colnames(timeloop) <- c("Date",variable_head[-1])
+  timeloop$Date <- as.Date(timeloop$Date, format= "%Y-%m-%d")
+  timeloop$year <- format(as.Date(timeloop$Date), format= "%Y")
+
+
+  #Calculation for the Daily WaterBalance
+  WaterBalance <- timeloop %>%
+    arrange(Date) %>%
+    mutate(	Year = year,
+            Date = Date,
+            Input = precip + iceRunoff,
+            Output = actET + catchmentRD1_w + catchmentRD2_w + catchmentRG1_w + catchmentRG2_w,
+            diffIntStor = intercStorage - lag(intercStorage, default = first(intercStorage)),
+            diffSWE = snowTotSWE - lag(snowTotSWE, default = first(snowTotSWE)),
+            diffSnowS_G = snowStorage_G - lag(snowStorage_G, default = first(snowStorage_G)),
+            diffactMPS = actMPS - lag(actMPS, default = first(actMPS)),
+            diffactLPS = actLPS - lag(actLPS, default = first(actLPS)),
+            diffactRG1 = actRG1 - lag(actRG1, default = first(actRG1)),
+            diffactRG2 = actRG2 - lag(actRG2, default = first(actRG2)),
+            diffchannelStorage_w = channelStorage_w - lag(channelStorage_w, default = first(channelStorage_w)),
+            diffactDPS = actDPS - lag(actDPS, default = first(actDPS)),
+            glacestor = glacStorage,
+            Storage = diffIntStor + diffSWE + diffSnowS_G + diffactMPS+ diffactLPS + diffactRG1 + diffactRG2 + diffchannelStorage_w + diffactDPS + glacestor,
+            WatBal = Input - Output - Storage
+    )
+  WaterBalance <- WaterBalance[-1,]
+
+  #Visualization of the timeLoop
+  return(ggplot(data=WaterBalance, mapping=aes(y =  WatBal, x = Date))+
+           geom_line(color="blue") +
+           theme_bw() + ylab("Water Balance"))
+
+}
+
+
+
+#'Annual plot of input vs output
+#'
+#'Visulization of annual input and outputs
+#'
+#'@param TimeLoop Output from J2K model
+#'
+#'@return Annual input and output information
+#'
+#'@examples
+#'WatBal_inVSout <- plot(x=years, y=value)
+#'
+#'@export
+
+J2K_inVSoutInfo <- function(){
+
+  #read header names
+  variable_head <- unlist(strsplit(scan(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),"",nlines = 1,skip = 5,sep = "\n"),split = "\t"))
+  #read data
+  timeloop <- fread(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),skip = 10)
+  timeloop <- timeloop[,1:length(variable_head)]
+  #assign column names
+  colnames(timeloop) <- c("Date",variable_head[-1])
+  timeloop$Date <- as.Date(timeloop$Date, format= "%Y-%m-%d")
+  timeloop$year <- format(as.Date(timeloop$Date), format= "%Y")
+
+  #For the analysis of the Input and output variables
+  #Removing the years with less than 360 years of data
+  timeloop <- timeloop %>%
+    add_count(year) %>%
+    filter(n > 360)
+
+  #Visulization of the Input and Output variables
+  WaterBalance2 <- timeloop %>%
+    group_by(year)%>%
+    summarise(
+      Precip = sum(precip),
+      Ice_runoff = sum(iceRunoff),
+      actET = sum(actET),
+      Annual_RD1 = sum(catchmentRD1_w),
+      Annual_RD2 = sum(catchmentRD2_w),
+      Annual_RG1 = sum(catchmentRG1_w),
+      Annual_RG2 = sum(catchmentRG2_w),
+      Snowmelt_Out_G = sum(snowMelt),
+      Glacier_runoff = sum(glacierRunoff), #glacierRunoff=snowmeltg+icerunoff+rainrunoff
+      SnowMelt_G = sum(snowMelt_G), #plus iceRunoff
+      Rain_runoff = sum(rainRunoff)
+    )
+
+  a <- which(colnames(WaterBalance2)== "Precip")
+  b <- which(colnames(WaterBalance2)== "Ice_runoff")
+  c <- which(colnames(WaterBalance2)== "actET")
+  d <- which(colnames(WaterBalance2)== "Annual_RD1")
+  e <- which(colnames(WaterBalance2)== "Annual_RD2")
+  f <- which(colnames(WaterBalance2)== "Annual_RG1")
+  g <- which(colnames(WaterBalance2)== "Annual_RG2")
+  h <- which(colnames(WaterBalance2)== "Snowmelt_Out_G")
+
+  WaterBalance3 <- WaterBalance2 %>%
+    mutate(
+      Input = rowSums(.[a:b]),
+      Total_Discharge = rowSums(.[d:g]),
+      Output = rowSums(.[c:g]),
+      PERofET_inPrecip = (actET/Precip*100),
+      PERofRD1_inQ = (Annual_RD1/Total_Discharge*100),
+      PERofRD2_inQ = (Annual_RD2/Total_Discharge*100),
+      PERofRG1_inQ = (Annual_RG1/Total_Discharge*100),
+      PERofRG2_inQ = (Annual_RG2/Total_Discharge*100),
+      PERofIce_inGlaRunoff = (Ice_runoff/Glacier_runoff*100),
+      PERofSnowMelt_G_inGlaRunoff = (SnowMelt_G/Glacier_runoff*100),
+      PERofRainRunof_inGlaRunoff = (Rain_runoff/Glacier_runoff*100)
+    )
+
+  #Visualization of the Input Vs Output
+  w4 <-WaterBalance3 %>%
+    select(year,Input,Output)
+
+  w4 <- reshape2::melt(w4, id.vars="year")
+
+  return(ggplot(w4, aes(variable,value)) +
+           geom_col(aes(fill=variable),position="identity")+
+           scale_fill_manual(values=c("#56B4E9","#E69F00"), "Legend") +
+           theme_classic()+ ylab("mm") + xlab("") +
+           facet_grid(.~year))
+
+}
+
+
+
+#'Major components of the water balance
+#'
+#'Visulization of major components groups in Input, Output and Snow/Glacier
+#'
+#'@param TimeLoop Output from J2K model
+#'
+#'@return Info on the water balance
+#'
+#'@examples
+#'WatBal_majorcomponents() <- plot(x=varables, y=value)
+#'
+#'@export
+
+
+J2K_WatBalMajorComps <- function(){
+
+  #read header names
+  variable_head <- unlist(strsplit(scan(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),"",nlines = 1,skip = 5,sep = "\n"),split = "\t"))
+  #read data
+  timeloop <- fread(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),skip = 10)
+  timeloop <- timeloop[,1:length(variable_head)]
+  #assign column names
+  colnames(timeloop) <- c("Date",variable_head[-1])
+  timeloop$Date <- as.Date(timeloop$Date, format= "%Y-%m-%d")
+  timeloop$year <- format(as.Date(timeloop$Date), format= "%Y")
+
+  WaterBalance2 <- timeloop %>%
+    group_by(year)%>%
+    summarise(
+      Precip = sum(precip),
+      Ice_runoff = sum(iceRunoff),
+      actET = sum(actET),
+      Annual_RD1 = sum(catchmentRD1_w),
+      Annual_RD2 = sum(catchmentRD2_w),
+      Annual_RG1 = sum(catchmentRG1_w),
+      Annual_RG2 = sum(catchmentRG2_w),
+      Snowmelt_Out_G = sum(snowMelt),
+      Glacier_runoff = sum(glacierRunoff), #glacierRunoff=snowmeltg+icerunoff+rainrunoff
+      SnowMelt_G = sum(snowMelt_G), #plus iceRunoff
+      Rain_runoff = sum(rainRunoff)
+    )
+
+  a <- which(colnames(WaterBalance2)== "Precip")
+  b <- which(colnames(WaterBalance2)== "Ice_runoff")
+  c <- which(colnames(WaterBalance2)== "actET")
+  d <- which(colnames(WaterBalance2)== "Annual_RD1")
+  e <- which(colnames(WaterBalance2)== "Annual_RD2")
+  f <- which(colnames(WaterBalance2)== "Annual_RG1")
+  g <- which(colnames(WaterBalance2)== "Annual_RG2")
+  h <- which(colnames(WaterBalance2)== "Snowmelt_Out_G")
+
+  WaterBalance3 <- WaterBalance2 %>%
+    mutate(
+      Input = rowSums(.[a:b]),
+      Total_Discharge = rowSums(.[d:g]),
+      Output = rowSums(.[c:g]),
+      PERofET_inPrecip = (actET/Precip*100),
+      PERofRD1_inQ = (Annual_RD1/Total_Discharge*100),
+      PERofRD2_inQ = (Annual_RD2/Total_Discharge*100),
+      PERofRG1_inQ = (Annual_RG1/Total_Discharge*100),
+      PERofRG2_inQ = (Annual_RG2/Total_Discharge*100),
+      PERofIce_inGlaRunoff = (Ice_runoff/Glacier_runoff*100),
+      PERofSnowMelt_G_inGlaRunoff = (SnowMelt_G/Glacier_runoff*100),
+      PERofRainRunof_inGlaRunoff = (Rain_runoff/Glacier_runoff*100)
+    )
+
+  #Visulization of the Input and Output Variables
+  yr <- which(colnames(WaterBalance3)== "year")
+  WaterBal3 = select (WaterBalance3, -yr)
+
+  WaterBal3 <- WaterBal3 %>%
+    summarise_all(funs(mean))
+
+  WatBalance <- WaterBal3 %>%
+    gather(Input,Output,Glacier_runoff, key="WatBal", value="Value")
+
+  WatBalance <- reshape2::melt(WatBalance, id.vars="WatBal")
+
+  a1 <- filter(WatBalance, WatBal == "Input" & variable == "Precip")
+  a2 <- filter(WatBalance, WatBal == "Input" & variable == "Ice_runoff")
+  a3 <- filter(WatBalance, WatBal == "Output" & variable == "Annual_RD1")
+  a4 <- filter(WatBalance, WatBal == "Output" & variable == "Annual_RD2")
+  a5 <- filter(WatBalance, WatBal == "Output" & variable == "Annual_RG1")
+  a6 <- filter(WatBalance, WatBal == "Output" & variable == "Annual_RG2")
+  a7 <- filter(WatBalance, WatBal == "Output" & variable == "actET")
+  a8 <- filter(WatBalance, WatBal == "Glacier_runoff" & variable == "SnowMelt_G")
+  a9 <- filter(WatBalance, WatBal == "Glacier_runoff" & variable == "Ice_runoff")
+  a10 <- filter(WatBalance, WatBal == "Glacier_runoff" & variable == "Rain_runoff")
+  a11 <- filter(WatBalance, WatBal == "Glacier_runoff" & variable == "Snowmelt_Out_G")
+
+  WatBalance2 <- rbind(a1, a2,a3,a4, a5, a6, a7,a8,a9,a10,a11)
+
+  cols <- c(Precip="deepskyblue", Ice_runoff="blue4",
+            Annual_RD1="brown", Annual_RD2="darkgoldenrod4", Annual_RG1= "goldenrod3", Annual_RG2= "dimgray", actET= "chocolate3",
+            SnowMelt_G="darkolivegreen3", Ice_runoff="blue4", Rain_runoff="gold", Snowmelt_Out_G= "green")
+
+  title <- as_labeller(c(Input="Input",Output="Output", Glacier_runoff="Snow and Glaicer"))
+
+  return(ggplot(WatBalance2, aes(variable,value)) +
+           geom_col(position="identity", fill= cols) +
+           scale_color_manual(values = cols)+
+           theme_bw()+ ylab("mm") + xlab("") +
+           facet_wrap(.~WatBal, scales= "free", labeller= title))
+}
+
+
+
+#'Export the data
+#'
+#'Export the summary data in the Output folder
+#'
+#'@param TimeLoop Output from J2K model
+#'
+#'@return Saves the summary of the waterbalance in the folder
+#'
+#'@examples
+#'WatBal_writesummary<- write.csv("Info_On_Water_Balance.csv" in Output folder)
+#'
+#'@export
+
+J2K_WatBalsummarySave <- function(){
+  #read header names
+  variable_head <- unlist(strsplit(scan(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),"",nlines = 1,skip = 5,sep = "\n"),split = "\t"))
+  #read data
+  timeloop <- fread(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),skip = 10)
+  timeloop <- timeloop[,1:length(variable_head)]
+  #assign column names
+  colnames(timeloop) <- c("Date",variable_head[-1])
+  timeloop$Date <- as.Date(timeloop$Date, format= "%Y-%m-%d")
+  timeloop$year <- format(as.Date(timeloop$Date), format= "%Y")
+
+  #For the analysis of the Input and output variables
+  #Removing the years with less than 360 years of data
+  timeloop <- timeloop %>%
+    add_count(year) %>%
+    filter(n > 360)
+
+  #Visulization of the Input and Output variables
+  WaterBalance2 <- timeloop %>%
+    group_by(year)%>%
+    summarise(
+      Precip = sum(precip),
+      Ice_runoff = sum(iceRunoff),
+      actET = sum(actET),
+      Annual_RD1 = sum(catchmentRD1_w),
+      Annual_RD2 = sum(catchmentRD2_w),
+      Annual_RG1 = sum(catchmentRG1_w),
+      Annual_RG2 = sum(catchmentRG2_w),
+      Snowmelt_Out_G = sum(snowMelt),
+      Glacier_runoff = sum(glacierRunoff), #glacierRunoff=snowmeltg+icerunoff+rainrunoff
+      SnowMelt_G = sum(snowMelt_G), #plus iceRunoff
+      Rain_runoff = sum(rainRunoff)
+    )
+
+  a <- which(colnames(WaterBalance2)== "Precip")
+  b <- which(colnames(WaterBalance2)== "Ice_runoff")
+  c <- which(colnames(WaterBalance2)== "actET")
+  d <- which(colnames(WaterBalance2)== "Annual_RD1")
+  e <- which(colnames(WaterBalance2)== "Annual_RD2")
+  f <- which(colnames(WaterBalance2)== "Annual_RG1")
+  g <- which(colnames(WaterBalance2)== "Annual_RG2")
+  h <- which(colnames(WaterBalance2)== "Snowmelt_Out_G")
+
+  WaterBalance3 <- WaterBalance2 %>%
+    mutate(
+      Input = rowSums(.[a:b]),
+      Total_Discharge = rowSums(.[d:g]),
+      Output = rowSums(.[c:g]),
+      PERofET_inPrecip = (actET/Precip*100),
+      PERofRD1_inQ = (Annual_RD1/Total_Discharge*100),
+      PERofRD2_inQ = (Annual_RD2/Total_Discharge*100),
+      PERofRG1_inQ = (Annual_RG1/Total_Discharge*100),
+      PERofRG2_inQ = (Annual_RG2/Total_Discharge*100),
+      PERofIce_inGlaRunoff = (Ice_runoff/Glacier_runoff*100),
+      PERofSnowMelt_G_inGlaRunoff = (SnowMelt_G/Glacier_runoff*100),
+      PERofRainRunof_inGlaRunoff = (Rain_runoff/Glacier_runoff*100),
+      PERofSnowOutG_inQ = (Snowmelt_Out_G/Total_Discharge*100)
+    )
+  #Saving the information as a csv file in the same folder
+  print(write.csv(WaterBalance3, paste(workingFolder,"Info_On_Water_Balance.csv"), row.names=TRUE))
+
+  print("THE FILE IS SAAVED IN Output FOLDER")
+  #Selecting some parameters to display in the Console at the end
+  WaterBalance4 <- WaterBalance3 %>%
+    select(year,PERofET_inPrecip,PERofRD1_inQ, PERofIce_inGlaRunoff, PERofSnowOutG_inQ)%>%
+    mutate_if(is.numeric, round, 2)
+
+  #Displaying the percentage in the Console itself
+  print(kable(WaterBalance4, format = "pandoc", caption = "Brief summary of Water-balance in percentage"))
+}
+
+
+
+#'Annual plot of Annual Snow Cover
+#'
+#'Visulization of annual input and outputs
+#'
+#'@param TimeLoop Output from J2K model
+#'
+#'@return Annual input and output information
+#'
+#'@examples
+#'WatBal_TS_snowcover <- plot(x=years, y=value)
+#'
+#'@export
+
+J2K_snowcoverTS <- function(){
+  #read header
+  #workingFolder<- "C:\\Users\\kkhatiwada\\Dropbox\\J2000_Panjshir\\Panjshir_Hybrid_4snow\\"
+  header <- unlist(strsplit(scan(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),"",nlines = 1,skip = 5,sep = "\n"),split = "\t"))
+  #get the timeloop
+  timeloop <- fread(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),skip = 10)
+  #keep the length of the timeloop same as header lenthg
+  timeloop <- timeloop[,1:length(header)]
+  #keep the header names
+  colnames(timeloop) <- c(header)
+
+  #extract the month and years
+  timeloop$Dates <- as.Date(timeloop$ID, "%Y-%m-%d")
+  timeloop$Year <- format(timeloop$Dates,"%Y")
+  timeloop$Month <- format(timeloop$Dates,"%m")
+
+  timeloop$modisSnow[timeloop$modisSnow=="Inf"]<-NA
+
+  #timeseries plot
+  analysis1 <-	timeloop %>%
+    mutate(MODISMovingMean = (rollmean(modisSnow, 8, fill = NA, partial=TRUE)/1000000),
+           J2KMovingMean = (rollmean(snowCoverAreaT, 8, fill = NA,  partial=TRUE)/1000000))
+
+  return(ggplot(analysis1, aes(Dates)) +
+           geom_line(aes(y=MODISMovingMean, colour="red"))+
+           geom_line(aes(y=J2KMovingMean, colour="black" )) + theme_bw() +
+           ylab("snow cover area (km2)") + xlab("") +
+           scale_colour_discrete(name = "Legend", labels = c("J2K_model", "MODIS")))
+}
+
+
+
+#'Annual plot of
+#'
+#'Visulization of annual input and outputs
+#'
+#'@param TimeLoop Output from J2K model
+#'
+#'@return Annual input and output information
+#'
+#'@examples
+#'WatBal_MonthMean_SC <- plot(x=years, y=value)
+#'
+#'@export
+
+J2K_MonthMeanSC <- function(){
+  #read header
+  header <- unlist(strsplit(scan(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),"",nlines = 1,skip = 5,sep = "\n"),split = "\t"))
+  #get the timeloop
+  timeloop <- fread(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),skip = 10)
+  #keep the length of the timeloop same as header lenthg
+  timeloop <- timeloop[,1:length(header)]
+  #keep the header names
+  colnames(timeloop) <- c(header)
+
+  #extract the month and years
+  timeloop$Dates <- as.Date(timeloop$ID, "%Y-%m-%d")
+  timeloop$Year <- format(timeloop$Dates,"%Y")
+  timeloop$Month <- format(timeloop$Dates,"%m")
+
+  timeloop$modisSnow[timeloop$modisSnow=="Inf"]<-NA
+
+  #timeseries plot
+  analysis1 <-	timeloop %>%
+    mutate(MODISMovingMean = (rollmean(modisSnow, 8, fill = NA, partial=TRUE)/1000000),
+           J2KMovingMean = (rollmean(snowCoverAreaT, 8, fill = NA,  partial=TRUE)/1000000))
+
+  #for monthly visulization in line graph
+  analysis2 <- analysis1 %>%
+    group_by(Month) %>%
+    summarize (MODIS =mean(MODISMovingMean, na.rm=TRUE),
+               J2Kmodel = mean(J2KMovingMean, na.rm=TRUE))
+  #
+  AnnualPlot <- reshape2::melt(analysis2, id.vars='Month')
+  return(ggplot(data = AnnualPlot, aes(x = Month, y = value, 	colour = variable, group = variable)) + geom_line()+  geom_point()+
+           theme_bw()+ ylab("Snow cover area (km2)") + xlab("Months") + scale_y_continuous(labels = comma))
+
+}
+
+
+#'Annual plot of
+#'
+#'Visulization of annual input and outputs
+#'
+#'@param TimeLoop Output from J2K model
+#'
+#'@return Annual input and output information
+#'
+#'@examples
+#'WatBal_AnnualSum_SC <- plot(x=years, y=value)
+#'
+#'@export
+
+J2K_AnnualSumSC <- function(){
+  #read header
+  header <- unlist(strsplit(scan(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),"",nlines = 1,skip = 5,sep = "\n"),split = "\t"))
+  #get the timeloop
+  timeloop <- fread(paste(workingFolder, "output\\current\\TimeLoop.dat",sep=""),skip = 10)
+  #keep the length of the timeloop same as header lenthg
+  timeloop <- timeloop[,1:length(header)]
+  #keep the header names
+  colnames(timeloop) <- c(header)
+
+  #extract the month and years
+  timeloop$Dates <- as.Date(timeloop$ID, "%Y-%m-%d")
+  timeloop$Year <- format(timeloop$Dates,"%Y")
+  timeloop$Month <- format(timeloop$Dates,"%m")
+
+  timeloop$modisSnow[timeloop$modisSnow=="Inf"]<-NA
+
+  #timeseries plot
+  analysis1 <-	timeloop %>%
+    mutate(MODISMovingMean = (rollmean(modisSnow, 8, fill = NA, partial=TRUE)/1000000),
+           J2KMovingMean = (rollmean(snowCoverAreaT, 8, fill = NA,  partial=TRUE)/1000000))
+
+  #for monthly visulization in line graph
+  analysis2 <- analysis1 %>%
+    group_by(Month) %>%
+    summarize (MODIS =mean(MODISMovingMean, na.rm=TRUE),
+               J2Kmodel = mean(J2KMovingMean, na.rm=TRUE))
+
+  #for annual visulization in bar plot
+  analysis3 <-	timeloop %>%
+    group_by(Year) %>%
+    summarize (MODIS =sum(modisSnow, na.rm=TRUE),
+               J2Kmodel = sum(snowCoverAreaT, na.rm=TRUE))
+
+  AnnualPlot2 <- reshape2::melt(analysis3, id.vars='Year')
+  return(ggplot(data = AnnualPlot2, aes(x = Year, y = value, fill = variable, group = variable)) + geom_col(stat='identity', position='dodge')+
+           theme_bw()+ ylab("Sum of the total area (km2)") + xlab("Years") + scale_y_continuous(labels = comma))
+
+}
+
+
+
+
+#'Annual plot of
+#'
+#'Visulization of annual input and outputs
+#'
+#'@param TimeLoop Output from J2K model
+#'
+#'@return Annual input and output information
+#'
+#'@examples
+#'WatBal_RainfallvsRunoff_Y <- plot(x=years, y=value)
+#'
+#'@export
+
+J2K_RainVsRunoffmmYearly <- function(){
+  # reading Observed runoff
+  # read header names
+
+  Date_format <- readline("Some of the date format are %d.%m.%Y; %Y-%m-%d. What is date format of your data?")
+  runoff <- fread(paste(workingFolder,"input\\local\\orun.dat",sep=""), fill= TRUE, skip = 16)
+  #converting to date format
+  runoff$V1 <- as.Date(runoff$V1, format= Date_format)
+
+  #removing the time if kept in new column
+  runoff$V2 <- as.numeric(runoff$V2)
+  #found some of the JAMs model has an extra column having the time therefore making it as o
+  runoff <- runoff %>% select_if(~sum(!is.na(.)) > 0)
+  #removing if any lines has all the runoff as 0, just making the above line more flexible
+  runoff <- if(2 != ncol(runoff)){dplyr::select(runoff, V1:V2)}else print(runoff)
+  # assign column names
+  colnames(runoff) <- c("Date","observedRunofff")
+  #creating table of month and year for the analysis latter
+  runoff$year <- format(runoff$Date, format= "%Y")
+  runoff$month <- format(runoff$Date, format= "%m")
+  #treat -9999 as NA
+  runoff <- na_if(runoff, -9999)
+
+
+
+
+  # reading Observed precipitation
+  #identifying the nrow in which name is written and providing the header as that information
+  header33 <- strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"",skip = 1, nlines = 15, sep = "\n"),split = "\t")
+  Nnumber <-  which(grepl("name", header33))
+  header3 <- unlist(strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"", skip = Nnumber, nlines = 1, sep = "\n"),split = "\t"))
+  #read rain.dat file
+  precip <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
+
+  #creating a new column with the provided date
+  precip$V1 <- as.Date(precip$V1, format= Date_format)
+  #fixing the issue of having time as a column
+  precip$V2 <- as.numeric(precip$V2)
+
+  ##calulating the average of precipitation of the area.
+  precip <- na_if(precip, -9999)
+  precip$Avgp = rowMeans(precip[,-1], na.rm=TRUE)
+
+  Precip2 <- precip[,1]
+
+  #keeping the average and stations information in a same table
+  AvgP <- cbind(Precip2, precip$Avgp)
+  colnames(AvgP) <- c("Date", "Precip")
+
+  #joining the file with the runoff file
+  InPQ <- runoff %>%
+    left_join(AvgP, by = "Date")
+
+
+  #for converting the discharge to mm
+  header4 <- unlist(strsplit(scan(paste(workingFolder,"parameter\\hrus.par",sep=""),"",skip = 1, nlines = 1, sep = "\n"),split = "\t"))
+  hrus4area <- fread(paste(workingFolder,"parameter\\hrus.par",sep=""),skip = 5)
+  colnames(hrus4area) <- c(header4)
+
+
+  #getting the total  area
+  BasinArea <- sum(hrus4area$area, na.rm = TRUE)
+  #converting Q to mm and creating a new column runoffinmm
+  PnQq <- InPQ %>%
+    mutate(runoffinmm = observedRunofff*1000*24*3600/BasinArea)
+
+  PnQ <- PnQq %>%
+    add_count(year) %>%
+    filter(n > 360)
+
+  ##plots
+  #annual average plot
+  AnnualPlot <- PnQ %>%
+    group_by(year) %>%
+    summarise(Annual_Precip =mean(Precip, na.rm=TRUE)*360,
+              Annual_Runoff = mean(runoffinmm, na.rm=TRUE)*360 )
+
+  AnnualPlot <- reshape2::melt(AnnualPlot, id.vars='year')
+
+  return(ggplot(AnnualPlot, aes(x=year, y=value, fill=variable)) +
+           geom_bar(stat='identity', position='dodge') +
+           scale_fill_manual(values=c("#56B4E9","#E69F00"), "Legend") +
+           theme_classic()+ ylab("mm") + xlab("Years"))
+
+
+}
+
+
+#'Annual plot of Rain Vs Runoff in MonthlyScale
+#'
+#'Visulization of annual input and outputs
+#'
+#'@param input Output from J2K model
+#'
+#'@return Annual input and output information
+#'
+#'@examples
+#'WatBal_RainfallvsRunoff_M <- plot(x=years, y=value)
+#'
+#'@export
+
+J2K_RainVsRunoffmmMonthly <- function(){
+  # reading Observed runoff
+  # read header names
+  Date_format <- readline("Some of the date format are (%d.%m.%Y); (%Y-%m-%d). What is date format of your data?")
+  runoff <- fread(paste(workingFolder,"input\\local\\orun.dat",sep=""), fill= TRUE, skip = 16)
+  #converting to date format
+  runoff$V1 <- as.Date(runoff$V1, format= Date_format)
+
+  #removing the time if kept in new column
+  runoff$V2 <- as.numeric(runoff$V2)
+  #found some of the JAMs model has an extra column having the time therefore making it as o
+  runoff <- runoff %>% select_if(~sum(!is.na(.)) > 0)
+  #removing if any lines has all the runoff as 0, just making the above line more flexible
+  runoff <- if(2 != ncol(runoff)){dplyr::select(runoff, V1:V2)}else print(runoff)
+
+  # assign column names
+  colnames(runoff) <- c("Date","observedRunofff")
+  #creating table of month and year for the analysis latter
+  runoff$year <- format(runoff$Date, format= "%Y")
+  runoff$month <- format(runoff$Date, format= "%m")
+  #treat -9999 as NA
+  runoff <- na_if(runoff, -9999)
+  # reading Observed precipitation
+  #identifying the nrow in which name is written and providing the header as that information
+  header33 <- strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"",skip = 1, nlines = 15, sep = "\n"),split = "\t")
+  Nnumber <-  which(grepl("name", header33))
+  header3 <- unlist(strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"", skip = Nnumber, nlines = 1, sep = "\n"),split = "\t"))
+  #read rain.dat file
+  precip <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
+
+  #creating a new column with the provided date
+  precip$V1 <- as.Date(precip$V1, format= Date_format)
+  #fixing the issue of having time as a column
+  precip$V2 <- as.numeric(precip$V2)
+
+  ##calulating the average of precipitation of the area.
+  precip <- na_if(precip, -9999)
+  precip$Avgp = rowMeans(precip[,-1], na.rm=TRUE)
+  Precip2 <- precip[,1]
+
+  #keeping the average and stations information in a same table
+  AvgP <- cbind(Precip2, precip$Avgp)
+  colnames(AvgP) <- c("Date", "Precip")
+
+  #joining the file with the runoff file
+  InPQ <- runoff %>%
+    left_join(AvgP, by = "Date")
+
+
+  #for converting the discharge to mm
+  header4 <- unlist(strsplit(scan(paste(workingFolder,"parameter\\hrus.par",sep=""),"",skip = 1, nlines = 1, sep = "\n"),split = "\t"))
+  hrus4area <- fread(paste(workingFolder,"parameter\\hrus.par",sep=""),skip = 5)
+  colnames(hrus4area) <- c(header4)
+
+
+  #getting the total  area
+  BasinArea <- sum(hrus4area$area, na.rm = TRUE)
+  #converting Q to mm and creating a new column runoffinmm
+  PnQq <- InPQ %>%
+    mutate(runoffinmm = observedRunofff*1000*24*3600/BasinArea)
+
+  PnQ <- PnQq %>%
+    add_count(year) %>%
+    filter(n > 360)
+
+  ##plots
+  #annual average plot
+  AnnualMPlot <- PnQ %>%
+    group_by(month) %>%
+    summarise(Monthly_average_Precip =mean(Precip, na.rm=TRUE)*30,
+              Monthly_average_Runoff = mean(runoffinmm,na.rm=TRUE)*30)
+
+  AnnualPlot2 <- reshape2::melt(AnnualMPlot, id.vars='month')
+
+
+  #AnnualMPlot <- AnnualMPlot[,-1]
+  #colSums(AnnualMPlot)
+  #print(AnnualMPlot)
+
+  return(ggplot(AnnualPlot2, aes(x=month, y=value, fill=variable)) +
+           geom_bar(stat='identity', position='dodge') +
+           scale_fill_manual(values=c("#56B4E9","#E69F00"), "Legend") +
+           theme_classic()+ ylab("mm") + xlab("Months"))
+
+
+}
+
+
+
+

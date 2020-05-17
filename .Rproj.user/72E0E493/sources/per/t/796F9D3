@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589699693992.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "938943246",
+    "id" : "796F9D3",
+    "lastKnownWriteTime" : 1589699744,
+    "last_content_update" : 1589699744859,
+    "path" : "D:/R/CreatingPackage/Test6/analyzeJ2Kmodel/R/info.R",
+    "project_path" : "R/info.R",
+    "properties" : {
+        "cursorPosition" : "0,14",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
