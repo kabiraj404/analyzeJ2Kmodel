@@ -7,15 +7,15 @@
 J2K_inVSoutInfo()
 }
 \arguments{
-\item{TimeLoop}{Output from J2K model}
+\item{TimeLoop}{Considers the timeloop file from the Output folder from J2K model}
 }
 \value{
-Annual input and output information
+Annual input and output. Note_1:It should have atleast 360 days to be considered a year. Note_2: The sum of the variables is considered for the visulization.
 }
 \description{
 Visulization of annual input and outputs
 }
 \examples{
-WatBal_inVSout <- plot(x=years, y=value)
+J2K_inVSoutInfo <- plot(x=input_output, y=Yearly_sum_value)
 
 }

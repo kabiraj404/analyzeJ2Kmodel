@@ -7,15 +7,15 @@
 J2K_WatBalplot()
 }
 \arguments{
-\item{TimeLoop}{The timeloop file present in output folder of J2K model}
+\item{TimeLoop}{The plot is based on the timeloop.dat file present in output folder of J2K model}
 }
 \value{
 Plot with the daily water balance
 }
 \description{
-More info in the basic of results on J2000 hydrological model
+Plots the daily storage in the basin. We know that the Input in a basin is equal to output _+ storage. Therefore the plot aims to show the storage of the basin. Theoritically a perfect model should have the storage(waterbalance) near to zero so that the water cycle is complete and there is no water water storage in the basin. If you see some spikes or higher values in the plot, it might be that the water has been stuck in some HRUs. Check them out.
 }
 \examples{
-WatBal_plot() <- plot(x=years, y= daily_water_storage_in_basin)
+J2K_WatBalplot <- plot(x=years, y= daily_water_storage_in_basin)
 
 }
