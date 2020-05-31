@@ -54,6 +54,26 @@ This is possible because to read the timeloop.dat file of the model, I have used
 In my example I have get the following result.    
 <img width="650" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
 
-SO, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitaoin or discharge and so on. For this we have the another funtion. But before that lets see the dailey waterbalance of the basin. 
+SO, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitaoin or discharge and so on. For this we have the another funtion. But before that lets see the dailey waterbalance of the basin.  
 
+* **_J2K_WatBalplot()_**         
+We get the similar type of figure. 
+
+<img width="312" alt="watbal" src="https://user-images.githubusercontent.com/64681103/83352538-db0b4b00-a36b-11ea-8365-3f510334543b.png">     
+you might not get the exactly this figure but it has to be near to zero, if you are checking with dudhkoshi you might get the plot with value near to zero but not the exactly same which will be updated soon. Now lets check the input and output variables from timeloop.
+
+* **_J2K_WatBalplot()_**      
+
+We can see the following figure:
+XXXXXXXXXXXXXXX
+
+from the figure we can see the major variables of the input and outpout. Additionally the snow and glacier component amount are also displayed. All the value sare in mm. It is an important plot for the visulization of the overall information of the basin.     
+Now if i want to save the informaton based on each year I have to use the following code. 
+
+* **_J2K_WatBalsummarySave_**   
+This will export the summary data in the Output folder.The quick overview is displayed in the console as below. The supplimnet informaiton you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc. 
+
+XXXXXXXXXXXXX
+
+NOw lets see the other variables. 
 
