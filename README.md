@@ -15,7 +15,7 @@ The devtools package provides install_github() that enables installing packages 
 
 * _library(analyzeJ2Kmodel)_
 
-If you are using R.4.0 you might get the following error while trying to install the package, it might be possibly due to the version mismatch so you can escape installing the newer versions. 
+If you are using R.4.0 you might get the following error while trying to install the package, it might be possibly due to the version mismatch so you can escape installing the newer versions.     
 <img width="312" alt="installPackage1" src="https://user-images.githubusercontent.com/64681103/83350456-fbcba480-a35b-11ea-9199-ff3737035fcd.png">
 
 ## Install the dependent packages 
@@ -45,12 +45,15 @@ Note: you should have workingFolder as the path where your jam file of the model
 _*workingFolder <- "D:\\R\\CreatingPackage\\test20200531\\j2k_dudh_koshi_modified\\"_
 
 Lets starts with visulizing the input and output of the model. For this purpose use:    
-* **J2K_inVSoutInfo()**     
+* **_J2K_inVSoutInfo()_**     
 
 NOTE: You might get the following error:     
 _Error in fread(paste(workingFolder, "output\\current\\TimeLoop.dat", sep = ""),  : could not find function "fread"_        
-This is possible because to read the timeloop.dat file of the model, I have used the _fread_ function from the _time.loop_ package and as requested above you might not have installed the dependent package. **Therefore, I would again suggest you to install all the required dependent package at first.** I am not sure but if it annoying, I will try to make these package to be installed by default while installing the _analyzeJ2K_ package by itself. But for now lets go ahead :) 
+This is possible because to read the timeloop.dat file of the model, I have used the _fread_ function from the _time.loop_ package and as requested above you might not have installed the dependent package. **Therefore, I would again suggest you to install all the required dependent package at first.** I am not sure but if it annoying, I will try to make these package to be installed by default while installing the _analyzeJ2Kmodel_ package by itself. But for now lets go ahead :) 
 
-In my example I have get the following result. 
+In my example I have get the following result.    
+<img width="650" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
+
+SO, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitaoin or discharge and so on. For this we have the another funtion. But before that lets see the dailey waterbalance of the basin. 
 
 
