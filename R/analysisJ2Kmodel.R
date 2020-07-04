@@ -52,6 +52,8 @@ J2K_WatBalplot <- function(){
            theme_bw() + ylab("Water Balance"))
 
 }
+##################################end of the J2K_WatBalplot ###############################################
+
 
 
 
@@ -140,6 +142,9 @@ J2K_inVSoutInfo <- function(){
            facet_grid(.~year))
 
 }
+##################################end of the J2K_inVSoutInfo ###############################################
+
+
 
 
 
@@ -247,19 +252,22 @@ J2K_WatBalMajorComps <- function(){
            theme_bw()+ ylab("mm") + xlab("") +
            facet_wrap(.~WatBal, scales= "free", labeller= title))
 }
+######################################end of J2K_WatBalMajorComps #############################################
+
+
 
 
 
 #'Export the data
 #'
-#'Export the summary data in the Output folder.The quick overview is displayed in the console. The supplimnet informaiton you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc.
+#'Export the summary data in the working folder.The quick overview is displayed in the console. The supplimnet informaiton you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc.
 #'
 #'@param TimeLoop Based on the timeloop file the yearly value of the different variables and their percentage are saved as .csv file in the Output folder of the model
 #'
 #'@return Saves the summary of the waterbalance in the folder
 #'
 #'@examples
-#'WatBal_writesummary<- write.csv("Info_On_Water_Balance.csv" in Output folder)
+#'J2K_WatBalsummarySave<- write.csv("Info_On_Water_Balance.csv" in workingFolder)
 #'
 #'@export
 
@@ -324,28 +332,30 @@ J2K_WatBalsummarySave <- function(){
   #Saving the information as a csv file in the same folder
   print(write.csv(WaterBalance3, paste(workingFolder,"Info_On_Water_Balance.csv"), row.names=TRUE))
 
-  print("THE FILE IS SAAVED IN Output FOLDER")
+  print("The FILE is SAVED is saved in the workingFolder")
   #Selecting some parameters to display in the Console at the end
   WaterBalance4 <- WaterBalance3 %>%
-    select(year,PERofET_inPrecip,PERofRD1_inQ, PERofIce_inGlaRunoff, PERofSnowOutG_inQ)%>%
+    select(year,PERofET_inPrecip, PERofIce_inGlaRunoff, PERofSnowOutG_inQ)%>%
     mutate_if(is.numeric, round, 2)
 
   #Displaying the percentage in the Console itself
   print(kable(WaterBalance4, format = "pandoc", caption = "Brief summary of Water-balance in percentage"))
 }
+################################end of the J2K_WatBalsummarySave #################################################
+
 
 
 
 #'Annual plot of Annual Snow Cover
 #'
-#'Visulization of annual input and outputs
+#'Helps in the visulization of the daily snow cover area
 #'
-#'@param TimeLoop Output from J2K model
+#'@param TimeLoop Based on the timeLoop of J2K model
 #'
-#'@return Annual input and output information
+#'@return visual of MODIS and model snow cover area daily 
 #'
 #'@examples
-#'WatBal_TS_snowcover <- plot(x=years, y=value)
+#'J2K_snowcoverTS <- plot(x=days, y=snow cover area )
 #'
 #'@export
 
@@ -376,21 +386,24 @@ J2K_snowcoverTS <- function(){
            geom_line(aes(y=MODISMovingMean, colour="red"))+
            geom_line(aes(y=J2KMovingMean, colour="black" )) + theme_bw() +
            ylab("snow cover area (km2)") + xlab("") +
-           scale_colour_discrete(name = "Legend", labels = c("J2K_model", "MODIS")))
+           scale_colour_discrete(name = "Legend", labels = c("MODIS", "J2Kmodel")))
 }
+##############################################end of the J2K_snowcoverTS ########################################
 
 
 
-#'Annual plot of
+
+
+#'Monthly snow cover area (km2)
 #'
-#'Visulization of annual input and outputs
+#'Helps in the visulization of the monthly average snow cover area. This will be particularly useful if someone is trying to observe the change in each month. 
 #'
-#'@param TimeLoop Output from J2K model
+#'@param TimeLoop It considers the input as MODIS and the output from J2K model and makes a comparative plot
 #'
-#'@return Annual input and output information
+#'@return Monthly snow cover area information
 #'
 #'@examples
-#'WatBal_MonthMean_SC <- plot(x=years, y=value)
+#'J2K_MonthMeanSC <- plot(x=years, y=monthly area)
 #'
 #'@export
 
@@ -427,18 +440,21 @@ J2K_MonthMeanSC <- function(){
            theme_bw()+ ylab("Snow cover area (km2)") + xlab("Months") + scale_y_continuous(labels = comma))
 
 }
+###############################################end of the J2K_MonthMeanSC ########################################
 
 
-#'Annual plot of
+
+
+#'Annual sum of total snow cover area (km2)
 #'
-#'Visulization of annual input and outputs
+#'Helps in the visulization of annual snow cover area. This will be particularly useful if someone is trying to observe the total change in volume in a particular area. 
 #'
-#'@param TimeLoop Output from J2K model
+#'@param TimeLoop It considers the input as MODIS and the output from J2K model and makes a comparative plot 
 #'
-#'@return Annual input and output information
+#'@return Annual snow cover area information
 #'
 #'@examples
-#'WatBal_AnnualSum_SC <- plot(x=years, y=value)
+#'J2K_AnnualSumSC <- plot(x=years, y=total area)
 #'
 #'@export
 
@@ -481,171 +497,64 @@ J2K_AnnualSumSC <- function(){
            theme_bw()+ ylab("Sum of the total area (km2)") + xlab("Years") + scale_y_continuous(labels = comma))
 
 }
+###################################end of the J2K_AnnualSumSC ####################################################
 
 
 
 
-#'Annual plot of
+
+
+#'Monthly precipitation and discharge ( mm)
 #'
-#'Visulization of annual input and outputs
+#'This function helps in the visulization of the precipitation and discharge in the same unit(mm). Daily average value of the provided station/gauge point is computed to form the montly value of precipitaiton vs discharge 
 #'
-#'@param TimeLoop Output from J2K model
+#'@param input Considers the input value for the J2K model
 #'
-#'@return Annual input and output information
-#'
-#'@examples
-#'WatBal_RainfallvsRunoff_Y <- plot(x=years, y=value)
-#'
-#'@export
-
-J2K_RainVsRunoffmmYearly <- function(){
-  # reading Observed runoff
-  # read header names
-
-  Date_format <- readline("Some of the date format are %d.%m.%Y; %Y-%m-%d. What is date format of your data?")
-  runoff <- fread(paste(workingFolder,"input\\local\\orun.dat",sep=""), fill= TRUE, skip = 16)
-  #converting to date format
-  runoff$V1 <- as.Date(runoff$V1, format= Date_format)
-
-  #removing the time if kept in new column
-  runoff$V2 <- as.numeric(runoff$V2)
-  #found some of the JAMs model has an extra column having the time therefore making it as o
-  runoff <- runoff %>% select_if(~sum(!is.na(.)) > 0)
-  #removing if any lines has all the runoff as 0, just making the above line more flexible
-  runoff <- if(2 != ncol(runoff)){dplyr::select(runoff, V1:V2)}else print(runoff)
-  # assign column names
-  colnames(runoff) <- c("Date","observedRunofff")
-  #creating table of month and year for the analysis latter
-  runoff$year <- format(runoff$Date, format= "%Y")
-  runoff$month <- format(runoff$Date, format= "%m")
-  #treat -9999 as NA
-  runoff <- na_if(runoff, -9999)
-
-
-
-
-  # reading Observed precipitation
-  #identifying the nrow in which name is written and providing the header as that information
-  header33 <- strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"",skip = 1, nlines = 15, sep = "\n"),split = "\t")
-  Nnumber <-  which(grepl("name", header33))
-  header3 <- unlist(strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"", skip = Nnumber, nlines = 1, sep = "\n"),split = "\t"))
-  #read rain.dat file
-  precip <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
-
-  #creating a new column with the provided date
-  precip$V1 <- as.Date(precip$V1, format= Date_format)
-  #fixing the issue of having time as a column
-  precip$V2 <- as.numeric(precip$V2)
-
-  ##calulating the average of precipitation of the area.
-  precip <- na_if(precip, -9999)
-  precip$Avgp = rowMeans(precip[,-1], na.rm=TRUE)
-
-  Precip2 <- precip[,1]
-
-  #keeping the average and stations information in a same table
-  AvgP <- cbind(Precip2, precip$Avgp)
-  colnames(AvgP) <- c("Date", "Precip")
-
-  #joining the file with the runoff file
-  InPQ <- runoff %>%
-    left_join(AvgP, by = "Date")
-
-
-  #for converting the discharge to mm
-  header4 <- unlist(strsplit(scan(paste(workingFolder,"parameter\\hrus.par",sep=""),"",skip = 1, nlines = 1, sep = "\n"),split = "\t"))
-  hrus4area <- fread(paste(workingFolder,"parameter\\hrus.par",sep=""),skip = 5)
-  colnames(hrus4area) <- c(header4)
-
-
-  #getting the total  area
-  BasinArea <- sum(hrus4area$area, na.rm = TRUE)
-  #converting Q to mm and creating a new column runoffinmm
-  PnQq <- InPQ %>%
-    mutate(runoffinmm = observedRunofff*1000*24*3600/BasinArea)
-
-  PnQ <- PnQq %>%
-    add_count(year) %>%
-    filter(n > 360)
-
-  ##plots
-  #annual average plot
-  AnnualPlot <- PnQ %>%
-    group_by(year) %>%
-    summarise(Annual_Precip =mean(Precip, na.rm=TRUE)*360,
-              Annual_Runoff = mean(runoffinmm, na.rm=TRUE)*360 )
-
-  AnnualPlot <- reshape2::melt(AnnualPlot, id.vars='year')
-
-  return(ggplot(AnnualPlot, aes(x=year, y=value, fill=variable)) +
-           geom_bar(stat='identity', position='dodge') +
-           scale_fill_manual(values=c("#56B4E9","#E69F00"), "Legend") +
-           theme_classic()+ ylab("mm") + xlab("Years"))
-
-
-}
-
-
-#'Annual plot of Rain Vs Runoff in MonthlyScale
-#'
-#'Visulization of annual input and outputs
-#'
-#'@param input Output from J2K model
-#'
-#'@return Annual input and output information
+#'@return Helps in the monthly visulization of the P vs Q  in same unit
 #'
 #'@examples
-#'WatBal_RainfallvsRunoff_M <- plot(x=years, y=value)
+#'J2K_RainVsRunoffmmMonthly <- plot(x=years, y=value (mm))
 #'
 #'@export
 
 J2K_RainVsRunoffmmMonthly <- function(){
   # reading Observed runoff
-  # read header names
-  Date_format <- readline("Some of the date format are (%d.%m.%Y); (%Y-%m-%d). What is date format of your data?")
-  runoff <- fread(paste(workingFolder,"input\\local\\orun.dat",sep=""), fill= TRUE, skip = 16)
+   Date_format <- readline("Some of the date format are %d.%m.%Y; %Y-%m-%d. What is date format of your data?")
+  runoff2 <- fread(paste(workingFolder,"input\\local\\orun.dat",sep=""), fill= TRUE, skip = 16)
   #converting to date format
-  runoff$V1 <- as.Date(runoff$V1, format= Date_format)
+  runoff2$Date <- as.Date(runoff2$V1, format= Date_format)
 
   #removing the time if kept in new column
-  runoff$V2 <- as.numeric(runoff$V2)
-  #found some of the JAMs model has an extra column having the time therefore making it as o
-  runoff <- runoff %>% select_if(~sum(!is.na(.)) > 0)
-  #removing if any lines has all the runoff as 0, just making the above line more flexible
-  runoff <- if(2 != ncol(runoff)){dplyr::select(runoff, V1:V2)}else print(runoff)
-
-  # assign column names
-  colnames(runoff) <- c("Date","observedRunofff")
+  runoff2$Orun <- as.numeric(runoff2$V2)
+  
+  runoff <-  runoff2 %>% dplyr::select("Date", "Orun")
+  
   #creating table of month and year for the analysis latter
   runoff$year <- format(runoff$Date, format= "%Y")
   runoff$month <- format(runoff$Date, format= "%m")
   #treat -9999 as NA
   runoff <- na_if(runoff, -9999)
-  # reading Observed precipitation
-  #identifying the nrow in which name is written and providing the header as that information
-  header33 <- strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"",skip = 1, nlines = 15, sep = "\n"),split = "\t")
-  Nnumber <-  which(grepl("name", header33))
-  header3 <- unlist(strsplit(scan(paste(workingFolder,"input\\local\\orun.dat",sep=""),"", skip = Nnumber, nlines = 1, sep = "\n"),split = "\t"))
-  #read rain.dat file
-  precip <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
+ 
 
-  #creating a new column with the provided date
-  precip$V1 <- as.Date(precip$V1, format= Date_format)
+  # reading Observed precipitation
+  precip2 <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
+ 
   #fixing the issue of having time as a column
-  precip$V2 <- as.numeric(precip$V2)
+  precip2$V2 <- as.numeric(precip2$V2)
 
   ##calulating the average of precipitation of the area.
-  precip <- na_if(precip, -9999)
-  precip$Avgp = rowMeans(precip[,-1], na.rm=TRUE)
-  Precip2 <- precip[,1]
-
-  #keeping the average and stations information in a same table
-  AvgP <- cbind(Precip2, precip$Avgp)
-  colnames(AvgP) <- c("Date", "Precip")
-
+  precip2 <- na_if(precip2, -9999)
+  precip2$Avgp = rowMeans(precip2[,-1], na.rm=TRUE)
+  
+ #creating a new column with the provided date
+  precip2$Date <- as.Date(precip2$V1, format= Date_format)
+  
+   precip <-  precip2 %>% dplyr::select("Date", "Avgp")
+  
+  
   #joining the file with the runoff file
-  InPQ <- runoff %>%
-    left_join(AvgP, by = "Date")
+	InPQ <- runoff %>%
+   dplyr::left_join(precip, by = "Date")
 
 
   #for converting the discharge to mm
@@ -658,7 +567,7 @@ J2K_RainVsRunoffmmMonthly <- function(){
   BasinArea <- sum(hrus4area$area, na.rm = TRUE)
   #converting Q to mm and creating a new column runoffinmm
   PnQq <- InPQ %>%
-    mutate(runoffinmm = observedRunofff*1000*24*3600/BasinArea)
+    dplyr::mutate(runoffinmm = Orun*1000*24*3600/BasinArea)
 
   PnQ <- PnQq %>%
     add_count(year) %>%
@@ -668,24 +577,106 @@ J2K_RainVsRunoffmmMonthly <- function(){
   #annual average plot
   AnnualMPlot <- PnQ %>%
     group_by(month) %>%
-    summarise(Monthly_average_Precip =mean(Precip, na.rm=TRUE)*30,
+    summarise(Monthly_average_Precip =mean(Avgp, na.rm=TRUE)*30,
               Monthly_average_Runoff = mean(runoffinmm,na.rm=TRUE)*30)
 
   AnnualPlot2 <- reshape2::melt(AnnualMPlot, id.vars='month')
-
-
-  #AnnualMPlot <- AnnualMPlot[,-1]
-  #colSums(AnnualMPlot)
-  #print(AnnualMPlot)
 
   return(ggplot(AnnualPlot2, aes(x=month, y=value, fill=variable)) +
            geom_bar(stat='identity', position='dodge') +
            scale_fill_manual(values=c("#56B4E9","#E69F00"), "Legend") +
            theme_classic()+ ylab("mm") + xlab("Months"))
-
-
 }
+#######################################end of the J2K_RainVsRunoffmmMonthly #######################################
 
 
 
+
+
+
+
+#'Annual sum of precipitation and discharge in mm
+#'
+#'This function helps in the visulization of annual of both the precipitation and discharge in the same unit(mm). Daily average precipitation from all the available station is computed to form the annual sum of the precipitaiton vs discharge of provided discharge station.  
+#'
+#'@param input Considers the input value for the J2K model 
+#'
+#'@return Helps in the annual visulization of the P vs Q  in same unit
+#'
+#'@examples
+#'J2K_RainVsRunoffmmYearly <- plot(x=years, y=value (mm))
+#'
+#'@export
+
+J2K_RainVsRunoffmmYearly <- function(){
+  # reading Observed runoff
+   Date_format <- readline("Some of the date format are %d.%m.%Y; %Y-%m-%d. What is date format of your data?")
+  runoff2 <- fread(paste(workingFolder,"input\\local\\orun.dat",sep=""), fill= TRUE, skip = 16)
+  
+  #converting to date format and selecting the discharge
+  runoff2$Date <- as.Date(runoff2$V1, format= Date_format)
+
+  runoff2$Orun <- as.numeric(runoff2$V2)
+  
+  runoff <-  runoff2 %>% dplyr::select("Date", "Orun")
+  
+  #creating table of month and year for the analysis latter
+  runoff$year <- format(runoff$Date, format= "%Y")
+  runoff$month <- format(runoff$Date, format= "%m")
+  #treat -9999 as NA
+  runoff <- na_if(runoff, -9999)
+ 
+
+  # reading Observed precipitation
+  precip2 <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
+ 
+  #fixing the issue of having time as a column
+  precip2$V2 <- as.numeric(precip2$V2)
+
+  ##calulating the average of precipitation of the area.
+  precip2 <- na_if(precip2, -9999)
+  precip2$Avgp = rowMeans(precip2[,-1], na.rm=TRUE)
+  
+ #creating a new column with the provided date
+  precip2$Date <- as.Date(precip2$V1, format= Date_format)
+  
+   precip <-  precip2 %>% dplyr::select("Date", "Avgp")
+  
+  
+  #joining the file with the runoff file
+InPQ <- runoff %>%
+   dplyr::left_join(precip, by = "Date")
+
+
+  #for converting the discharge to mm
+  header4 <- unlist(strsplit(scan(paste(workingFolder,"parameter\\hrus.par",sep=""),"",skip = 1, nlines = 1, sep = "\n"),split = "\t"))
+  hrus4area <- fread(paste(workingFolder,"parameter\\hrus.par",sep=""),skip = 5)
+  colnames(hrus4area) <- c(header4)
+
+
+  #getting the total  area
+  BasinArea <- sum(hrus4area$area, na.rm = TRUE)
+  #converting Q to mm and creating a new column runoffinmm
+  PnQq <- InPQ %>%
+    dplyr::mutate(runoffinmm = Orun*1000*24*3600/BasinArea)
+
+  PnQ <- PnQq %>%
+    add_count(year) %>%
+    filter(n > 360)
+
+  ##plots
+  #annual average plot
+  AnnualPlot <- PnQ %>%
+    group_by(year) %>%
+    summarise(Annual_Precip =mean(Avgp, na.rm=TRUE)*360,
+              Annual_Runoff = mean(runoffinmm, na.rm=TRUE)*360 )
+
+  AnnualPlot <- reshape2::melt(AnnualPlot, id.vars='year')
+
+  return(ggplot(AnnualPlot, aes(x=year, y=value, fill=variable)) +
+           geom_bar(stat='identity', position='dodge') +
+           scale_fill_manual(values=c("#56B4E9","#E69F00"), "Legend") +
+           theme_classic()+ ylab("mm") + xlab("Years"))
+}
+##########################################end of the J2K_RainVsRunoffmmYearly #####################################
 

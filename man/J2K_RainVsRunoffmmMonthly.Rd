@@ -2,20 +2,20 @@
 % Please edit documentation in R/analysisJ2Kmodel.R
 \name{J2K_RainVsRunoffmmMonthly}
 \alias{J2K_RainVsRunoffmmMonthly}
-\title{Annual plot of Rain Vs Runoff in MonthlyScale}
+\title{Monthly precipitation and discharge ( mm)}
 \usage{
 J2K_RainVsRunoffmmMonthly()
 }
 \arguments{
-\item{input}{Output from J2K model}
+\item{input}{Considers the input value for the J2K model}
 }
 \value{
-Annual input and output information
+Helps in the monthly visulization of the P vs Q  in same unit
 }
 \description{
-Visulization of annual input and outputs
+This function helps in the visulization of the precipitation and discharge in the same unit(mm). Daily average value of the provided station/gauge point is computed to form the montly value of precipitaiton vs discharge
 }
 \examples{
-WatBal_RainfallvsRunoff_M <- plot(x=years, y=value)
+J2K_RainVsRunoffmmMonthly <- plot(x=years, y=value (mm))
 
 }

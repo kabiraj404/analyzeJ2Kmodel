@@ -2,20 +2,20 @@
 % Please edit documentation in R/analysisJ2Kmodel.R
 \name{J2K_MonthMeanSC}
 \alias{J2K_MonthMeanSC}
-\title{Annual plot of}
+\title{Monthly snow cover area (km2)}
 \usage{
 J2K_MonthMeanSC()
 }
 \arguments{
-\item{TimeLoop}{Output from J2K model}
+\item{TimeLoop}{It considers the input as MODIS and the output from J2K model and makes a comparative plot}
 }
 \value{
-Annual input and output information
+Monthly snow cover area information
 }
 \description{
-Visulization of annual input and outputs
+Helps in the visulization of the monthly average snow cover area. This will be particularly useful if someone is trying to observe the change in each month.
 }
 \examples{
-WatBal_MonthMean_SC <- plot(x=years, y=value)
+J2K_MonthMeanSC <- plot(x=years, y=monthly area)
 
 }

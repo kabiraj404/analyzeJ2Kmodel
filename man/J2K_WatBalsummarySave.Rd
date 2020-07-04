@@ -7,15 +7,15 @@
 J2K_WatBalsummarySave()
 }
 \arguments{
-\item{TimeLoop}{Output from J2K model}
+\item{TimeLoop}{Based on the timeloop file the yearly value of the different variables and their percentage are saved as .csv file in the Output folder of the model}
 }
 \value{
 Saves the summary of the waterbalance in the folder
 }
 \description{
-Export the summary data in the Output folder
+Export the summary data in the working folder.The quick overview is displayed in the console. The supplimnet informaiton you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc.
 }
 \examples{
-WatBal_writesummary<- write.csv("Info_On_Water_Balance.csv" in Output folder)
+J2K_WatBalsummarySave<- write.csv("Info_On_Water_Balance.csv" in workingFolder)
 
 }

@@ -13,7 +13,7 @@ J2K_inVSoutInfo()
 Annual input and output. Note_1:It should have atleast 360 days to be considered a year. Note_2: The sum of the variables is considered for the visulization.
 }
 \description{
-Visulization of annual input and outputs
+Visulization of annual Input and Output
 }
 \examples{
 J2K_inVSoutInfo <- plot(x=input_output, y=Yearly_sum_value)

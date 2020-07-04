@@ -2,20 +2,20 @@
 % Please edit documentation in R/analysisJ2Kmodel.R
 \name{J2K_AnnualSumSC}
 \alias{J2K_AnnualSumSC}
-\title{Annual plot of}
+\title{Annual sum of total snow cover area (km2)}
 \usage{
 J2K_AnnualSumSC()
 }
 \arguments{
-\item{TimeLoop}{Output from J2K model}
+\item{TimeLoop}{It considers the input as MODIS and the output from J2K model and makes a comparative plot}
 }
 \value{
-Annual input and output information
+Annual snow cover area information
 }
 \description{
-Visulization of annual input and outputs
+Helps in the visulization of annual snow cover area. This will be particularly useful if someone is trying to observe the total change in volume in a particular area.
 }
 \examples{
-WatBal_AnnualSum_SC <- plot(x=years, y=value)
+J2K_AnnualSumSC <- plot(x=years, y=total area)
 
 }

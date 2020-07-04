@@ -10,12 +10,12 @@ J2K_WatBalMajorComps()
 \item{TimeLoop}{Output from J2K model}
 }
 \value{
-Info on the water balance
+Info on the water balance components. Note_1: the sum of the variables is considered for now.
 }
 \description{
 Visulization of major components groups in Input, Output and Snow/Glacier
 }
 \examples{
-WatBal_majorcomponents() <- plot(x=varables, y=value)
+WatBal_majorcomponents() <- plot(x=variables, y=value)
 
 }

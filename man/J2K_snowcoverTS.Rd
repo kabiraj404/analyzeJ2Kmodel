@@ -7,15 +7,15 @@
 J2K_snowcoverTS()
 }
 \arguments{
-\item{TimeLoop}{Output from J2K model}
+\item{TimeLoop}{Based on the timeLoop of J2K model}
 }
 \value{
-Annual input and output information
+visual of MODIS and model snow cover area daily
 }
 \description{
-Visulization of annual input and outputs
+Helps in the visulization of the daily snow cover area
 }
 \examples{
-WatBal_TS_snowcover <- plot(x=years, y=value)
+J2K_snowcoverTS <- plot(x=days, y=snow cover area )
 
 }

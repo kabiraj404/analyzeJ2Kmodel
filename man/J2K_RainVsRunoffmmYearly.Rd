@@ -2,20 +2,20 @@
 % Please edit documentation in R/analysisJ2Kmodel.R
 \name{J2K_RainVsRunoffmmYearly}
 \alias{J2K_RainVsRunoffmmYearly}
-\title{Annual plot of}
+\title{Annual sum of precipitation and discharge in mm}
 \usage{
 J2K_RainVsRunoffmmYearly()
 }
 \arguments{
-\item{TimeLoop}{Output from J2K model}
+\item{input}{Considers the input value for the J2K model}
 }
 \value{
-Annual input and output information
+Helps in the annual visulization of the P vs Q  in same unit
 }
 \description{
-Visulization of annual input and outputs
+This function helps in the visulization of annual of both the precipitation and discharge in the same unit(mm). Daily average precipitation from all the available station is computed to form the annual sum of the precipitaiton vs discharge of provided discharge station.
 }
 \examples{
-WatBal_RainfallvsRunoff_Y <- plot(x=years, y=value)
+J2K_RainVsRunoffmmYearly <- plot(x=years, y=value (mm))
 
 }
