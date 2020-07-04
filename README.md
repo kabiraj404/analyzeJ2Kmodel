@@ -51,10 +51,10 @@ NOTE: You might get the following error:
 _Error in fread(paste(workingFolder, "output\\current\\TimeLoop.dat", sep = ""),  : could not find function "fread"_        
 This is possible because to read the timeloop.dat file of the model, I have used the _fread_ function from the _time.loop_ package and as requested above you might not have installed the dependent package. **Therefore, I would again suggest you to install all the required dependent package at first.** I am not sure but if it annoying, I will try to make these package to be installed by default while installing the _analyzeJ2Kmodel_ package by itself. But for now lets go ahead :) 
 
-In my example I have get the following result.    
-<img width="550" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
+In my example I have get the following result. 
 
-SO, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitaoin or discharge and so on. For this we have the another funtion. But before that lets see the dailey waterbalance of the basin.  
+<img width="550" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
+So, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitaoin or discharge and so on. For this we have the another funtion. But before that lets see the dailey waterbalance of the basin.  
 
 
 
@@ -63,25 +63,24 @@ SO, we can see that the model has run for the four years. And input and output f
 
 The major component of the water balance are visulized as below:
 
-
 <img width="550" alt="inoutvariables" src="https://user-images.githubusercontent.com/64681103/86511000-a8de8480-be14-11ea-973c-57efe2e3e0aa.png">
 
 From this figure we can see the major variables of the input and outpout. Additionally, the snow and glacier component amount are also displayed. All the value sare in mm. It is an important plot for the visulization of the overall information of the basin.     
 
-* **_J2K_WatBalplot()_**         
-We get the similar type of figure. 
+* **_J2K_WatBalplot()_**  
+
+The daily water balance of the basin can be viewed using the given function. 
 
 <img width="550" alt="watbal" src="https://user-images.githubusercontent.com/64681103/83352538-db0b4b00-a36b-11ea-8365-3f510334543b.png">     
-you might not get the exactly this figure but it has to be near to zero, if you are checking with dudhkoshi you might get the plot with value near to zero but not the exactly same which will be updated soon. Now lets check the input and output variables from timeloop.
-
+You might not get the exactly this figure but it has to be near to zero. 
 
 * **_J2K_WatBalsummarySave()_**  
 
 This saves the summary data in the working folder.The quick overview is displayed in the console as below. The suppliment information you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc. 
 
-XXXXXXXXXXXXX
+<img width="934" alt="write" src="https://user-images.githubusercontent.com/64681103/86511419-b7c73600-be18-11ea-9a64-7d88f6201b77.png">
 
-NOw, lets explore some function explore the snow cover area of the basin/catchment. 
+Now, lets explore some function explore the snow cover area of the basin/catchment. 
 
 
 * **_J2K_snowcoverTS()_**     
@@ -95,29 +94,27 @@ Another way to visualize the snow cover of the area is by viewing the monthly av
 * **_J2K_MonthMeanSC()_**         
 We the following type of figure. 
 
-<img width="550" alt="MOnthlyPvsQmm" src="https://user-images.githubusercontent.com/64681103/86511156-00c9bb00-be16-11ea-9fad-5a19a535e923.png">   
+<img width="550" alt="montlyMeanSC" src="https://user-images.githubusercontent.com/64681103/86511296-68343a80-be17-11ea-9cdb-69cb97df7803.png">  
 
-Likewise to view the snow cover in the annual scale, following package 
+Likewise, to view the snow cover in the annual scale, following package 
 
 * **_J2K_AnnualSumSC()_**         
 We get the similar type of figure. 
 
 <img width="550" alt="ANnualSnowSUm" src="https://user-images.githubusercontent.com/64681103/86511181-37073a80-be16-11ea-9d13-d3d113765364.png">    
 
-Now lets visualize the precipitation and discharge in the same unit. 
+Now, lets visualize the precipitation and discharge in the same unit. 
 
 * **_J2K_RainVsRunoffmmMonthly()_**         
-We get the following type of figure.  
 
 <img width="550" alt="MOnthlyPvsQmm" src="https://user-images.githubusercontent.com/64681103/86511239-e2b08a80-be16-11ea-8434-33aa5e1520b5.png">   
 Likewise to view the annual value, following function is applied. 
 
 
-* **_J2K_RainVsRunoffmmYearly()_**         
-We get the following type of figure.  
+* **_J2K_RainVsRunoffmmYearly()_** 
 
 <img width="550" alt="PvsQmmYearly" src="https://user-images.githubusercontent.com/64681103/86511254-fbb93b80-be16-11ea-902b-ce5f0040ccfb.png">   
-THese are just the basics ideas and plots, if have amy more, share your idea. 
+These are just the basics ideas and plots, if have amy more, share your idea. 
 
 
 
