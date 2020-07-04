@@ -60,7 +60,6 @@ So, we can see that the model has run for the four years. And input and output f
 
 * **_J2K_WatBalMajorComps()_**      
 
-
 The major component of the water balance are visulized as below:
 
 <img width="550" alt="inoutvariables" src="https://user-images.githubusercontent.com/64681103/86511000-a8de8480-be14-11ea-973c-57efe2e3e0aa.png">
@@ -108,8 +107,7 @@ Now, lets visualize the precipitation and discharge in the same unit.
 * **_J2K_RainVsRunoffmmMonthly()_**         
 
 <img width="550" alt="MOnthlyPvsQmm" src="https://user-images.githubusercontent.com/64681103/86511239-e2b08a80-be16-11ea-8434-33aa5e1520b5.png">   
-Likewise to view the annual value, following function is applied. 
-
+Likewise lets visulize the annual plots
 
 * **_J2K_RainVsRunoffmmYearly()_** 
 
