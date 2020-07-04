@@ -16,7 +16,7 @@ The devtools package provides install_github() that enables installing packages 
 * _library(analyzeJ2Kmodel)_
 
 If you are using R.4.0 you might get the following error while trying to install the package, it might be possibly due to the version mismatch so you can escape installing the newer versions.     
-<img width="312" alt="installPackage1" src="https://user-images.githubusercontent.com/64681103/83350456-fbcba480-a35b-11ea-9199-ff3737035fcd.png">
+<img width="550" alt="installPackage1" src="https://user-images.githubusercontent.com/64681103/83350456-fbcba480-a35b-11ea-9199-ff3737035fcd.png">
 
 ## Install the dependent packages 
 Once your package is installed on your mashine. YOu are ready to go. Before that make sure you have the package required for this package to run.    
@@ -60,7 +60,10 @@ SO, we can see that the model has run for the four years. And input and output f
 
 * **_J2K_WatBalMajorComps()_**      
 
-We can see the following figure:
+
+The major component of the water balance are visulized as below:
+
+
 <img width="550" alt="inoutvariables" src="https://user-images.githubusercontent.com/64681103/86511000-a8de8480-be14-11ea-973c-57efe2e3e0aa.png">
 
 From this figure we can see the major variables of the input and outpout. Additionally, the snow and glacier component amount are also displayed. All the value sare in mm. It is an important plot for the visulization of the overall information of the basin.     
@@ -72,44 +75,48 @@ We get the similar type of figure.
 you might not get the exactly this figure but it has to be near to zero, if you are checking with dudhkoshi you might get the plot with value near to zero but not the exactly same which will be updated soon. Now lets check the input and output variables from timeloop.
 
 
-* **_J2K_WatBalsummarySave()_**   
+* **_J2K_WatBalsummarySave()_**  
+
 This saves the summary data in the working folder.The quick overview is displayed in the console as below. The suppliment information you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc. 
 
 XXXXXXXXXXXXX
 
 NOw, lets explore some function explore the snow cover area of the basin/catchment. 
 
-J2K_snowcoverTS
-* **_J2K_snowcoverTS()_**         
+
+* **_J2K_snowcoverTS()_**     
+
 We the visulization of the daily snow cover area in each day. It is useful because, it helps to visualize the MODIS and the output from the model at the same instance. The other products can also be used in the model, however it needs some adjustment. I got the following figure. 
 
-<img width="573" alt="snowcoverTS" src="https://user-images.githubusercontent.com/64681103/86511010-d297ab80-be14-11ea-89d5-c8c863cf7e71.png">    
+<img width="550" alt="snowcoverTS" src="https://user-images.githubusercontent.com/64681103/86511010-d297ab80-be14-11ea-89d5-c8c863cf7e71.png">    
 
 Another way to visualize the snow cover of the area is by viewing the monthly average, for that purpose you can use the following function. 
 
 * **_J2K_MonthMeanSC()_**         
 We the following type of figure. 
 
-<###################################">     
+<img width="550" alt="MOnthlyPvsQmm" src="https://user-images.githubusercontent.com/64681103/86511156-00c9bb00-be16-11ea-9fad-5a19a535e923.png">   
+
 Likewise to view the snow cover in the annual scale, following package 
 
 * **_J2K_AnnualSumSC()_**         
 We get the similar type of figure. 
 
-<img .png">     
+<img width="550" alt="ANnualSnowSUm" src="https://user-images.githubusercontent.com/64681103/86511181-37073a80-be16-11ea-9d13-d3d113765364.png">    
 
 Now lets visualize the precipitation and discharge in the same unit. 
+
 * **_J2K_RainVsRunoffmmMonthly()_**         
 We get the following type of figure.  
 
-<img width="312"">     
+<img width="550" alt="MOnthlyPvsQmm" src="https://user-images.githubusercontent.com/64681103/86511239-e2b08a80-be16-11ea-8434-33aa5e1520b5.png">   
 Likewise to view the annual value, following function is applied. 
 
 
 * **_J2K_RainVsRunoffmmYearly()_**         
 We get the following type of figure.  
 
-<img width="312"">     
+<img width="550" alt="PvsQmmYearly" src="https://user-images.githubusercontent.com/64681103/86511254-fbb93b80-be16-11ea-902b-ce5f0040ccfb.png">   
 THese are just the basics ideas and plots, if have amy more, share your idea. 
 
 
