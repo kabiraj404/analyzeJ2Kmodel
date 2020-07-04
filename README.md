@@ -1,5 +1,5 @@
 # analyzeJ2Kmodel
-This package is for checking if you have rightly setup the J2000 hydrological model and also helps to create some basic plots out of your model. 
+This package is for checking some of the basic information while you are setting up the J2000 hydrological model in any basin. This package provides the basic glimpse of the  some basic plots/information of your basin. 
 Enjoy :)
 
 ## Install the devtools package
@@ -42,7 +42,7 @@ Here are some of the functions.
 
 ## Running the analyzeJ2Kpackage package
 Note: you should have workingFolder as the path where your jam file of the model is situated. In my case I do the following.    
-_*workingFolder <- "D:\\R\\CreatingPackage\\test20200531\\j2k_dudh_koshi_modified\\"_
+_*workingFolder <- "C:\\J2K_model\\"_
 
 Lets starts with visulizing the input and output of the model. For this purpose use:    
 * **_J2K_inVSoutInfo()_**     
@@ -52,28 +52,66 @@ _Error in fread(paste(workingFolder, "output\\current\\TimeLoop.dat", sep = ""),
 This is possible because to read the timeloop.dat file of the model, I have used the _fread_ function from the _time.loop_ package and as requested above you might not have installed the dependent package. **Therefore, I would again suggest you to install all the required dependent package at first.** I am not sure but if it annoying, I will try to make these package to be installed by default while installing the _analyzeJ2Kmodel_ package by itself. But for now lets go ahead :) 
 
 In my example I have get the following result.    
-<img width="650" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
+<img width="550" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
 
 SO, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitaoin or discharge and so on. For this we have the another funtion. But before that lets see the dailey waterbalance of the basin.  
+
+
+
+* **_J2K_WatBalMajorComps()_**      
+
+We can see the following figure:
+<img width="550" alt="inoutvariables" src="https://user-images.githubusercontent.com/64681103/86511000-a8de8480-be14-11ea-973c-57efe2e3e0aa.png">
+
+From this figure we can see the major variables of the input and outpout. Additionally, the snow and glacier component amount are also displayed. All the value sare in mm. It is an important plot for the visulization of the overall information of the basin.     
 
 * **_J2K_WatBalplot()_**         
 We get the similar type of figure. 
 
-<img width="312" alt="watbal" src="https://user-images.githubusercontent.com/64681103/83352538-db0b4b00-a36b-11ea-8365-3f510334543b.png">     
+<img width="550" alt="watbal" src="https://user-images.githubusercontent.com/64681103/83352538-db0b4b00-a36b-11ea-8365-3f510334543b.png">     
 you might not get the exactly this figure but it has to be near to zero, if you are checking with dudhkoshi you might get the plot with value near to zero but not the exactly same which will be updated soon. Now lets check the input and output variables from timeloop.
 
-* **_J2K_WatBalplot()_**      
 
-We can see the following figure:
-XXXXXXXXXXXXXXX
-
-from the figure we can see the major variables of the input and outpout. Additionally the snow and glacier component amount are also displayed. All the value sare in mm. It is an important plot for the visulization of the overall information of the basin.     
-Now if i want to save the informaton based on each year I have to use the following code. 
-
-* **_J2K_WatBalsummarySave_**   
-This will export the summary data in the Output folder.The quick overview is displayed in the console as below. The supplimnet informaiton you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc. 
+* **_J2K_WatBalsummarySave()_**   
+This saves the summary data in the working folder.The quick overview is displayed in the console as below. The suppliment information you would get is the percentage of the different variables. For example: yearly percentage of glacier in runoff. percentage of snowrunoff, evapotranspiration etc. 
 
 XXXXXXXXXXXXX
 
-NOw lets see the other variables. 
+NOw, lets explore some function explore the snow cover area of the basin/catchment. 
+
+J2K_snowcoverTS
+* **_J2K_snowcoverTS()_**         
+We the visulization of the daily snow cover area in each day. It is useful because, it helps to visualize the MODIS and the output from the model at the same instance. The other products can also be used in the model, however it needs some adjustment. I got the following figure. 
+
+<img width="573" alt="snowcoverTS" src="https://user-images.githubusercontent.com/64681103/86511010-d297ab80-be14-11ea-89d5-c8c863cf7e71.png">    
+
+Another way to visualize the snow cover of the area is by viewing the monthly average, for that purpose you can use the following function. 
+
+* **_J2K_MonthMeanSC()_**         
+We the following type of figure. 
+
+<###################################">     
+Likewise to view the snow cover in the annual scale, following package 
+
+* **_J2K_AnnualSumSC()_**         
+We get the similar type of figure. 
+
+<img .png">     
+
+Now lets visualize the precipitation and discharge in the same unit. 
+* **_J2K_RainVsRunoffmmMonthly()_**         
+We get the following type of figure.  
+
+<img width="312"">     
+Likewise to view the annual value, following function is applied. 
+
+
+* **_J2K_RainVsRunoffmmYearly()_**         
+We get the following type of figure.  
+
+<img width="312"">     
+THese are just the basics ideas and plots, if have amy more, share your idea. 
+
+
+
 
