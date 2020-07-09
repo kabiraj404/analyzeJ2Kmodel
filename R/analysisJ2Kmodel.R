@@ -346,13 +346,13 @@ J2K_WatBalsummarySave <- function(){
 
 
 
-#'Annual plot of Annual Snow Cover
+#' Snow Cover Visulization
 #'
 #'Helps in the visulization of the daily snow cover area
 #'
 #'@param TimeLoop Based on the timeLoop of J2K model
 #'
-#'@return visual of MODIS and model snow cover area daily 
+#'@return visual of MODIS and model snow cover area daily
 #'
 #'@examples
 #'J2K_snowcoverTS <- plot(x=days, y=snow cover area )
@@ -396,7 +396,7 @@ J2K_snowcoverTS <- function(){
 
 #'Monthly snow cover area (km2)
 #'
-#'Helps in the visulization of the monthly average snow cover area. This will be particularly useful if someone is trying to observe the change in each month. 
+#'Helps in the visulization of the monthly average snow cover area. This will be particularly useful if someone is trying to observe the change in each month.
 #'
 #'@param TimeLoop It considers the input as MODIS and the output from J2K model and makes a comparative plot
 #'
@@ -447,9 +447,9 @@ J2K_MonthMeanSC <- function(){
 
 #'Annual sum of total snow cover area (km2)
 #'
-#'Helps in the visulization of annual snow cover area. This will be particularly useful if someone is trying to observe the total change in volume in a particular area. 
+#'Helps in the visulization of annual snow cover area. This will be particularly useful if someone is trying to observe the total change in volume in a particular area.
 #'
-#'@param TimeLoop It considers the input as MODIS and the output from J2K model and makes a comparative plot 
+#'@param TimeLoop It considers the input as MODIS and the output from J2K model and makes a comparative plot
 #'
 #'@return Annual snow cover area information
 #'
@@ -506,7 +506,7 @@ J2K_AnnualSumSC <- function(){
 
 #'Monthly precipitation and discharge ( mm)
 #'
-#'This function helps in the visulization of the precipitation and discharge in the same unit(mm). Daily average value of the provided station/gauge point is computed to form the montly value of precipitaiton vs discharge 
+#'This function helps in the visulization of the precipitation and discharge in the same unit(mm). Daily average value of the provided station/gauge point is computed to form the montly value of precipitaiton vs discharge
 #'
 #'@param input Considers the input value for the J2K model
 #'
@@ -526,32 +526,32 @@ J2K_RainVsRunoffmmMonthly <- function(){
 
   #removing the time if kept in new column
   runoff2$Orun <- as.numeric(runoff2$V2)
-  
+
   runoff <-  runoff2 %>% dplyr::select("Date", "Orun")
-  
+
   #creating table of month and year for the analysis latter
   runoff$year <- format(runoff$Date, format= "%Y")
   runoff$month <- format(runoff$Date, format= "%m")
   #treat -9999 as NA
   runoff <- na_if(runoff, -9999)
- 
+
 
   # reading Observed precipitation
   precip2 <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
- 
+
   #fixing the issue of having time as a column
   precip2$V2 <- as.numeric(precip2$V2)
 
   ##calulating the average of precipitation of the area.
   precip2 <- na_if(precip2, -9999)
   precip2$Avgp = rowMeans(precip2[,-1], na.rm=TRUE)
-  
+
  #creating a new column with the provided date
   precip2$Date <- as.Date(precip2$V1, format= Date_format)
-  
+
    precip <-  precip2 %>% dplyr::select("Date", "Avgp")
-  
-  
+
+
   #joining the file with the runoff file
 	InPQ <- runoff %>%
    dplyr::left_join(precip, by = "Date")
@@ -597,9 +597,9 @@ J2K_RainVsRunoffmmMonthly <- function(){
 
 #'Annual sum of precipitation and discharge in mm
 #'
-#'This function helps in the visulization of annual of both the precipitation and discharge in the same unit(mm). Daily average precipitation from all the available station is computed to form the annual sum of the precipitaiton vs discharge of provided discharge station.  
+#'This function helps in the visulization of annual of both the precipitation and discharge in the same unit(mm). Daily average precipitation from all the available station is computed to form the annual sum of the precipitaiton vs discharge of provided discharge station.
 #'
-#'@param input Considers the input value for the J2K model 
+#'@param input Considers the input value for the J2K model
 #'
 #'@return Helps in the annual visulization of the P vs Q  in same unit
 #'
@@ -610,39 +610,39 @@ J2K_RainVsRunoffmmMonthly <- function(){
 
 J2K_RainVsRunoffmmYearly <- function(){
   # reading Observed runoff
-   Date_format <- readline("Some of the date format are %d.%m.%Y; %Y-%m-%d. What is date format of your data?")
+  Date_format <- readline("Some of the date format are %d.%m.%Y; %Y-%m-%d. What is date format of your data?")
   runoff2 <- fread(paste(workingFolder,"input\\local\\orun.dat",sep=""), fill= TRUE, skip = 16)
-  
+
   #converting to date format and selecting the discharge
   runoff2$Date <- as.Date(runoff2$V1, format= Date_format)
 
   runoff2$Orun <- as.numeric(runoff2$V2)
-  
+
   runoff <-  runoff2 %>% dplyr::select("Date", "Orun")
-  
+
   #creating table of month and year for the analysis latter
   runoff$year <- format(runoff$Date, format= "%Y")
   runoff$month <- format(runoff$Date, format= "%m")
   #treat -9999 as NA
   runoff <- na_if(runoff, -9999)
- 
+
 
   # reading Observed precipitation
   precip2 <- fread(paste(workingFolder,"input\\local\\rain.dat",sep=""),skip = 16)
- 
+
   #fixing the issue of having time as a column
   precip2$V2 <- as.numeric(precip2$V2)
 
   ##calulating the average of precipitation of the area.
   precip2 <- na_if(precip2, -9999)
   precip2$Avgp = rowMeans(precip2[,-1], na.rm=TRUE)
-  
+
  #creating a new column with the provided date
   precip2$Date <- as.Date(precip2$V1, format= Date_format)
-  
+
    precip <-  precip2 %>% dplyr::select("Date", "Avgp")
-  
-  
+
+
   #joining the file with the runoff file
 InPQ <- runoff %>%
    dplyr::left_join(precip, by = "Date")
@@ -680,3 +680,93 @@ InPQ <- runoff %>%
 }
 ##########################################end of the J2K_RainVsRunoffmmYearly #####################################
 
+
+
+
+
+
+
+
+#'Fixing the Non-Glacial to Glacial Routing issue
+#'
+#'This will help to idenify the HRU ID which were providing the water from the non-glacier area to the glacier area and also solve the issue and save the file.
+#'
+#'@param hrus Considers the hrus for the J2K model
+#'
+#'@return Helps in solving the non-glacier to glacier routing issue and saving the improved file
+#'
+#'@examples
+#'J2K_FixmyNG2G <- write.csv(improved file, in the working folder)
+#'
+#'@export
+
+
+
+J2K_FixmyNG2G <- function(){
+
+#THIS SECTION IS STILL MESSY i AM WORKING ON It, IT DOESNTO WORK as it should
+
+# rm(list=ls(all=TRUE))
+
+# workingFolder <- "D:\\GithubT\\SampleData\\J2K_model\\"
+
+# if (!require("data.table")) install.packages("data.table")
+# library(data.table)
+# if (!require("ggplot2")) install.packages("ggplot2")
+# library(ggplot2)
+# if (!require("dplyr")) install.packages("dplyr")
+# library(dplyr)
+# if (!require("tidyr")) install.packages("tidyr")
+# library(tidyr)
+# if (!require("knitr")) install.packages("knitr")
+# library(knitr)
+# if (!require("zoo")) install.packages("zoo")
+# library(zoo)
+# if (!require("scales")) install.packages("scales")
+# library(scales)
+
+ #for converting the discharge to mm
+
+header22 <- unlist(strsplit(scan(paste(workingFolder,"parameter\\hrus.par",sep=""),"",skip = 1, nlines = 1, sep = "\n"),split = "\t"))
+hrus4NG2G <- fread(paste(workingFolder,"parameter\\hrus.par",sep=""),skip = 5)
+colnames(hrus4NG2G) <- c(header22)
+
+#identifying the glacier IDs
+Gid <-   hrus4NG2G[which(hrus4NG2G$landuseID == 222),]
+#idenifying the nOnglacier IDs
+NGid <-   hrus4NG2G[which(hrus4NG2G$landuseID < 222),]
+
+# identifying the to_ploy which have been proving water to glacial ID
+#messedID <- hrus4NG2G[ ! which(NGid$to_poly %in% Gid$ID )]
+
+okeyID <- hrus4NG2G[ which(NGid$to_poly %in% Gid$ID ),]
+
+messedID <-   NGid[ which(hrus4NG2G$ID %in% okeyID$ID),]
+
+#making the to_poly which provided water to glcier iD as zero
+messedID$to_poly <- 0
+messedID$to_reach <- messedID$elevation
+#idenifying the IDs that were messing around by proving water to the glacier ID
+M <- messedID$ID
+
+#removing the IDs which were supplying water to glacier. THis is just to add the new one that do not do so
+hrus4NG2G22 <- hrus4NG2G[! which(hrus4NG2G$ID %in% M ),]
+#merging the data which were not messing and the other
+hrus4NG2G33 <- rbind(hrus4NG2G22, messedID, use.names=TRUE, fill=FALSE)
+
+#making sure to keep the subbasin in the to reach where to poly is zero, it did not work, so I changed it up, while dealing with messed data. Need to re-check if there are any errors in future. But for now it seems ok.
+# chkIN <- hrus4NG2G3$to_poly
+# chkOUT <- hrus4NG2G3$elevation
+# product <- hrus4NG2G3$to_reach
+
+# for (i in 1:nrow(hrus4NG2G3)){
+# hrus4NG2G3$to_reach[i] <-  ifelse(chkIN[i] == 0, product[i] <- chkOUT[i], 1)}
+
+#Saving the information as a csv file in the same WorkingFolder
+ print(write.csv(hrus4NG2G33, paste(workingFolder,"UpdatedHRUs2.csv"), row.names=TRUE))
+
+ print("Please find the updated HRUS file in the workingFolder. For your information, following HRU_ID were messing with you: ")
+
+  #Displaying the percentage in the Console itself
+  print(M)
+}

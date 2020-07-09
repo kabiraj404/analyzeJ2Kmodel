@@ -9,7 +9,7 @@
 
 #' @docType package
 #'
-#' @author Kabiraj \email{kabiraj.khatiwada@gmail.com}
+#' @author Kabiraj \email{kabiraj(dot)khatiwada(at)}
 #'
 #' @name analyzeJ2Kmodel
 NULL

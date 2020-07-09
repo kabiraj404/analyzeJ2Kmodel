@@ -2,7 +2,7 @@
 % Please edit documentation in R/analysisJ2Kmodel.R
 \name{J2K_snowcoverTS}
 \alias{J2K_snowcoverTS}
-\title{Annual plot of Annual Snow Cover}
+\title{Snow Cover Visulization}
 \usage{
 J2K_snowcoverTS()
 }

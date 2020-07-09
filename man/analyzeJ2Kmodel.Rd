@@ -14,5 +14,5 @@ Based on this consideration all the calulations are made.
 Make sure to install the other packages required to run this package, by yourself. You can find the readme file in the following link:  "https://github.com/kabiraj404/analyzeJ2Kmodel/blob/master/README.md"
 }
 \author{
-Kabiraj \email{kabiraj.khatiwada@gmail.com}
+Kabiraj \email{kabiraj(dot)khatiwada(at)}
 }
