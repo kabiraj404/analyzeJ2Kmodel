@@ -11,9 +11,12 @@ The devtools package provides install_github() that enables installing packages 
 
 * _library(devtools)_
 
-* _install_github("kabiraj404/analyzeJ2Kmodel")_ #( here, kabiraj404 is the author and analyzeJ2Kmodel is the package name )
+* _install_github("kabiraj404/analyzeJ2Kmodel")_ 
+
+(Here, kabiraj404 is the author and analyzeJ2Kmodel is the package name )
 
 * _library(analyzeJ2Kmodel)_
+
 While using R.4.0, the following message might be seen while trying to install the package, Possibly due to the version mismatch, here the newer versions of packages can be skipped (3 in my case).     
 <img width="550" alt="d2WgZaObkv" src="https://user-images.githubusercontent.com/64681103/87873950-838d7100-c9e5-11ea-99e8-76779225f591.png">
 
