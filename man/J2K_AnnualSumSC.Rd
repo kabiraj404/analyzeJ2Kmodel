@@ -16,6 +16,6 @@ Annual snow cover area information
 Helps in the visulization of annual snow cover area. This will be particularly useful if someone is trying to observe the total change in volume in a particular area.
 }
 \examples{
-J2K_AnnualSumSC <- plot(x=years, y=total area)
+J2K_AnnualSumSC <- plot(x=years, y=totalarea)
 
 }
