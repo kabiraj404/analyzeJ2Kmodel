@@ -44,7 +44,8 @@ Here is some glimpse of each functions.
 
 ## Running the analyzeJ2Kpackage package
 Note: You should have workingFolder as the path where your jam file of the model is situated. In my case, I do the following. 
-(I have also kept the dummy model with limited data inside the repository "SampleData/J2K_model" to check the package)
+(I have also kept the dummy model with limited data inside the repository "SampleData/J2K_model" to check the package).
+
 _*workingFolder <- "C:\\J2K_model\\"_
 
 Lets starts with visulizing the input and output of the model. For this purpose use:    
