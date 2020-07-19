@@ -7,13 +7,13 @@ To install a R package from github, start by installing the devtools package. Th
 * _install.packages("devtools")_
 
 ## Install the package from GitHub
-The devtools package provides install_github() that enables installing packages from GitHub. Now, the package of interest, from GitHub, can be installed using the author name and the name of the package. For example in the following example we are installing analzeJ2Kmodel created kabiraj404. *_(in GitHub jargon, the package is the repository)_
+The devtools package provides install_github() that enables installing packages from GitHub. Now, the package of interest, from GitHub, can be installed using the author name and the name of the package. For example in the following example we are installing analzeJ2Kmodel created kabiraj404. 
 
 * _library(devtools)_
 
 * _install_github("kabiraj404/analyzeJ2Kmodel")_ 
 
-(Here, kabiraj404 is the author and analyzeJ2Kmodel is the package name )
+*(Here, kabiraj404 is the author and analyzeJ2Kmodel is the package name )
 
 * _library(analyzeJ2Kmodel)_
 
