@@ -47,6 +47,8 @@ _*workingFolder <- "C:\\J2K_model\\"_
 Lets starts with visulizing the input and output of the model. For this purpose use:    
 * **_J2K_inVSoutInfo()_**     
 
+NOTE: There is no need to put anything inside the bracket. 
+
 NOTE: You might get the following error:     
 _Error in fread(paste(workingFolder, "output\\current\\TimeLoop.dat", sep = ""),  : could not find function "fread"_        
 This is possible because to read the timeloop.dat file of the model, I have used the _fread_ function from the _time.loop_ package and you might not have installed the dependent packages as requested above . **Therefore, I would again suggest you to install all the required dependent package at first.** I am not sure whether it is annoying, if it is, I will try to make these package to be installed by default while installing the _analyzeJ2Kmodel_ package.  
@@ -54,8 +56,7 @@ This is possible because to read the timeloop.dat file of the model, I have used
 In my example I have get the following result. 
 
 <img width="550" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
-So, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitation or discharge values and so on. 
-
+So, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the amount of precipitation or discharge and so on. 
 
 * **_J2K_WatBalMajorComps()_**      
 
@@ -100,11 +101,13 @@ Likewise, to view the snow cover in the annual scale, following function is used
 <img width="550" alt="ANnualSnowSUm" src="https://user-images.githubusercontent.com/64681103/86511181-37073a80-be16-11ea-9d13-d3d113765364.png">    
 It is important to visualize of the precipitation and discharge in the same unit to get the holistic water balance situation of the basin. Following function displays the precipitation and discharge in the same unit "mm",based on your intput data. 
 
+
 * **_J2K_RainVsRunoffmmMonthly()_**         
 
 <img width="550" alt="MOnthlyPvsQmm" src="https://user-images.githubusercontent.com/64681103/86511239-e2b08a80-be16-11ea-8434-33aa5e1520b5.png">   
 
-While preparing this plot, the date format is asked, some of the date format are %d.%m.%Y; %Y-%m-%d, you can check your rain.dat, orun.dat or other input data to see the date format in start or end date. Now, lets visulize the annual plots
+While preparing this plot, the date format is asked, some of the date format are %d.%m.%Y; %Y-%m-%d, you can check your rain.dat, orun.dat or other input data to see the date format in start or end date. Now, lets visulize the annual plots.
+
 
 * **_J2K_RainVsRunoffmmYearly()_** 
 
