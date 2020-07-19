@@ -11,11 +11,11 @@ The devtools package provides install_github() that enables installing packages 
 
 * _library(devtools)_
 
-*_install_github("kabiraj404/analyzeJ2Kmodel")_ #( here, kabiraj404 is the author and analyzeJ2Kmodel is the package name )
+* _install_github("kabiraj404/analyzeJ2Kmodel")_ #( here, kabiraj404 is the author and analyzeJ2Kmodel is the package name )
 
 * _library(analyzeJ2Kmodel)_
 While using R.4.0, the following message might be seen while trying to install the package, Possibly due to the version mismatch, here the newer versions of packages can be skipped (3 in my case).     
-<img width="550" alt="installPackage1" src="https://user-images.githubusercontent.com/64681103/83350456-fbcba480-a35b-11ea-9199-ff3737035fcd.png">
+<img width="550" alt="d2WgZaObkv" src="https://user-images.githubusercontent.com/64681103/87873950-838d7100-c9e5-11ea-99e8-76779225f591.png">
 
 ## Install the dependent packages 
 Once the analyzeJ2Kmodel package is installed on the mashine. It is ready for the further analysis. Before that make sure the required suppliment packages for this package to run are on your mashine.    
@@ -54,7 +54,7 @@ This is possible because to read the timeloop.dat file of the model, I have used
 In my example I have get the following result. 
 
 <img width="550" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
-So, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitatoin or discharge values and so on. 
+So, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the precipitation or discharge values and so on. 
 
 
 * **_J2K_WatBalMajorComps()_**      
