@@ -48,27 +48,28 @@ Note: You should have workingFolder as the path where your jam file of the model
 
 _*workingFolder <- "C:\\J2K_model\\"_
 
-Lets starts with visulizing the input and output of the model. For this purpose use:    
-* **_J2K_inVSoutInfo()_**     
+Lets starts with visulizing the input and output of the model. For this purpose use: 
+
+* **_J2K_WatBalMajorComps()_**     
 
 NOTE: There is no need to put anything inside the bracket. 
 
 NOTE: You might get the following error:     
 _Error in fread(paste(workingFolder, "output\\current\\TimeLoop.dat", sep = ""),  : could not find function "fread"_        
-This is possible because to read the timeloop.dat file of the model, I have used the _fread_ function from the _time.loop_ package and you might not have installed the dependent packages as requested above . **Therefore, I would again suggest you to install all the required dependent package at first.** I am not sure whether it is annoying, if it is, I will try to make these package to be installed by default while installing the _analyzeJ2Kmodel_ package.  
-
-In my example I have get the following result. 
-
-<img width="550" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
-So, we can see that the model has run for the four years. And input and output for each year is shown in the figure. But we might get the question on what are the major components of the input and output. What is the amount of precipitation or discharge and so on. 
-
-* **_J2K_WatBalMajorComps()_**      
+This is possible because to read the timeloop.dat file of the model, I have used the _fread_ function from the _time.loop_ package and you might not have installed the dependent packages as requested above . **Therefore, I would again suggest you to install all the required dependent package at first.** I am not sure whether it is annoying, if it is, I will try to make these package to be installed by default while installing the _analyzeJ2Kmodel_ package. 
 
 The major component of the water balance are visualized as below:
 
 <img width="550" alt="inoutvariables" src="https://user-images.githubusercontent.com/64681103/86511000-a8de8480-be14-11ea-973c-57efe2e3e0aa.png">
 
-From this figure, we can see the major variables of the input and outpout. Additionally, the snow and glacier component amount are also displayed. All the values are in "mm" unit. It is an important plot for the visulization of the overall information of the basin. For further understanding of the basin, the daily water balance of the basin can be viewed using the given function.  
+From this figure, we can see the major variables of the input and outpout. Additionally, the snow and glacier component amount are also displayed. All the values are in "mm" unit. It is an important plot for the visulization of the overall information of the basin.
+
+* **_J2K_inVSoutInfo()_**     
+
+In my example I have get the following result of the input and output. 
+
+<img width="550" alt="INVSOUT" src="https://user-images.githubusercontent.com/64681103/83351237-e6597900-a361-11ea-8f66-f722871bf6af.png"> 
+So, we can see that the model has run for the four years. And input and output for each year is shown in the figure.  For further understanding of the basin, the daily water balance of the basin can be viewed using the given function.  
 
 * **_J2K_WatBalplot()_**  
 
